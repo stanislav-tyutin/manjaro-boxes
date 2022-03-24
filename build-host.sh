@@ -58,7 +58,7 @@ function start_qemu() {
     -net nic \
     -net user \
     -kernel vmlinuz-x86_64 \
-    -append "x86_64 lang=en_US keytable=us tz=UTC quiet systemd.show_status=1 misobasedir=manjaro misolable=${ISO_VOLUME_ID} driver=free 3"
+    -append "x86_64 lang=en_US keytable=us tz=UTC quiet systemd.show_status=1 misobasedir=manjaro misolable=${ISO_VOLUME_ID} driver=free 3" \
     -initrd initramfs-x86_64.img \
     -append "cow_spacesize=2G ip=dhcp net.ifnames=0 console=ttyS0 mirror=${MIRROR}" \
     -drive file=scratch-disk.img,format=raw,if=virtio \
@@ -108,37 +108,37 @@ function main() {
   send "root\n"
   expect "Password:"
   send "manjaro\n"
-  expect "[manjaro-gnome ~]# "
+  sleep 5
+  send "bash --noprofile --norc"
+  expect "bash-5.1# "
 
-  # Switch to bash and shutdown on error
-  send "bash\n"
-  expect "[manjaro-gnome ~]# "
+  # Shutdown on error
   send "trap \"shutdown now\" ERR\n"
-  expect "[manjaro-gnome ~]# "
+  expect "bash-5.1# "
 
   # Prepare environment
   send "mkdir /mnt/arch-boxes && mount -t 9p -o trans=virtio host /mnt/arch-boxes -oversion=9p2000.L\n"
-  expect "[manjaro-gnome ~]# "
+  expect "bash-5.1# "
   send "mkfs.ext4 /dev/vda && mkdir /mnt/scratch-disk/ && mount /dev/vda /mnt/scratch-disk && cd /mnt/scratch-disk\n"
-  expect "[manjaro-gnome ~]# "
+  expect "bash-5.1# "
   send "cp -a /mnt/arch-boxes/{box.ovf,build-inside-vm.sh,images} .\n"
-  expect "[manjaro-gnome ~]# "
+  expect "bash-5.1# "
   send "mkdir pkg && mount --bind pkg /var/cache/pacman/pkg\n"
-  expect "[manjaro-gnome ~]# "
+  expect "bash-5.1# "
 
   # Wait for pacman-init
   send "until systemctl is-active pacman-init; do sleep 1; done\n"
-  expect "[manjaro-gnome ~]# "
+  expect "bash-5.1# "
 
   # Install required packages
   send "pacman -Syu --ignore linux --noconfirm qemu-headless jq\n"
-  expect "[manjaro-gnome ~]# " 120 # (10/14) Updating module dependencies...
+  expect "bash-5.1# " 120 # (10/14) Updating module dependencies...
 
   ## Start build and copy output to local disk
   send "bash -x ./build-inside-vm.sh ${BUILD_VERSION:-}\n"
-  expect "[manjaro-gnome ~]# " 240 # qemu-img convert can take a long time
+  expect "bash-5.1# " 240 # qemu-img convert can take a long time
   send "cp -vr --preserve=mode,timestamps output /mnt/arch-boxes/tmp/$(basename "${TMPDIR}")/\n"
-  expect "[manjaro-gnome ~]# " 60
+  expect "bash-5.1# " 60
   mv output/* "${OUTPUT}/"
 
   # Shutdown the VM
