@@ -109,7 +109,7 @@ function main() {
   expect "Password:"
   send "manjaro\n"
   sleep 5
-  send "bash --noprofile --norc"
+  send "bash --noprofile --norc\n"
   expect "bash-5.1# "
 
   # Shutdown on error
