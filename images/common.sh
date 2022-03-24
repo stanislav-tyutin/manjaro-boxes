@@ -3,8 +3,8 @@
 function vagrant_common() {
   local NEWUSER="vagrant"
   # setting the user credentials
-  arch-chroot "${MOUNT}" /usr/bin/useradd -m -U "${NEWUSER}"
-  echo -e "${NEWUSER}\n${NEWUSER}" | arch-chroot "${MOUNT}" /usr/bin/passwd "${NEWUSER}"
+  manjaro-chroot "${MOUNT}" /usr/bin/useradd -m -U "${NEWUSER}"
+  echo -e "${NEWUSER}\n${NEWUSER}" | manjaro-chroot "${MOUNT}" /usr/bin/passwd "${NEWUSER}"
 
   # setting sudo for the user
   cat <<EOF >"${MOUNT}/etc/sudoers.d/${NEWUSER}"
@@ -23,7 +23,7 @@ DHCP=ipv4
 EOF
 
   # install vagrant ssh key
-  arch-chroot "${MOUNT}" /bin/bash -e <<EOF
+  manjaro-chroot "${MOUNT}" /bin/bash -e <<EOF
 install --directory --owner=vagrant --group=vagrant --mode=0700 /home/vagrant/.ssh
 curl --output /home/vagrant/.ssh/authorized_keys --location https://github.com/hashicorp/vagrant/raw/main/keys/vagrant.pub
 # WARNING: Please only update the hash if you are 100% sure it was intentionally updated by upstream.

@@ -8,7 +8,7 @@ shopt -s extglob
 readonly DEFAULT_DISK_SIZE="2G"
 readonly IMAGE="image.img"
 # shellcheck disable=SC2016
-readonly MIRROR='https://mirror.pkgbuild.com/$repo/os/$arch'
+readonly MIRROR='https://mirrors.manjaro.org/repo/stable/$repo/$arch'
 
 function init() {
   readonly ORIG_PWD="${PWD}"
@@ -61,17 +61,28 @@ function setup_disk() {
 # Install Arch Linux to the filesystem (bootstrap)
 function bootstrap() {
   cat <<EOF >pacman.conf
-[options]
-Architecture = auto
-
-[core]
-Include = mirrorlist
+Include = /etc/pacman.d/mirrorlist
 
 [extra]
-Include = mirrorlist
+SigLevel = PackageRequired
+Include = /etc/pacman.d/mirrorlist
 
 [community]
-Include = mirrorlist
+SigLevel = PackageRequired
+Include = /etc/pacman.d/mirrorlist
+
+# If you want to run 32 bit applications on your x86_64 system,
+# enable the multilib repositories as required here.
+
+[multilib]
+SigLevel = PackageRequired
+Include = /etc/pacman.d/mirrorlist
+
+# An example of a custom package repository.  See the pacman manpage for
+# tips on creating your own repositories.
+#[custom]
+#SigLevel = Optional TrustAll
+#Server = file:///home/custompkgs
 EOF
   echo "Server = ${MIRROR}" >mirrorlist
 
@@ -158,10 +169,10 @@ function create_image() {
   fi
 
   if [ 0 -lt "${#PACKAGES[@]}" ]; then
-    arch-chroot "${MOUNT}" /usr/bin/pacman -S --noconfirm "${PACKAGES[@]}"
+    manjaro-chroot "${MOUNT}" /usr/bin/pacman -S --noconfirm "${PACKAGES[@]}"
   fi
   if [ 0 -lt "${#SERVICES[@]}" ]; then
-    arch-chroot "${MOUNT}" /usr/bin/systemctl enable "${SERVICES[@]}"
+    manjaro-chroot "${MOUNT}" /usr/bin/systemctl enable "${SERVICES[@]}"
   fi
   "${2}"
   image_cleanup

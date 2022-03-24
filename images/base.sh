@@ -7,7 +7,7 @@ function pre() {
   # https://gitlab.archlinux.org/archlinux/arch-boxes/-/issues/117
   rm "${MOUNT}/etc/machine-id"
 
-  arch-chroot "${MOUNT}" /usr/bin/btrfs subvolume create /swap
+  manjaro-chroot "${MOUNT}" /usr/bin/btrfs subvolume create /swap
   chattr +C "${MOUNT}/swap"
   chmod 0700 "${MOUNT}/swap"
   fallocate -l 512M "${MOUNT}/swap/swapfile"
@@ -16,8 +16,8 @@ function pre() {
   echo -e "/swap/swapfile none swap defaults 0 0" >>"${MOUNT}/etc/fstab"
 
   sed -i -e 's/^#\(en_US.UTF-8\)/\1/' "${MOUNT}/etc/locale.gen"
-  arch-chroot "${MOUNT}" /usr/bin/locale-gen
-  arch-chroot "${MOUNT}" /usr/bin/systemd-firstboot --locale=en_US.UTF-8 --timezone=UTC --hostname=archlinux --keymap=us
+  manjaro-chroot "${MOUNT}" /usr/bin/locale-gen
+  manjaro-chroot "${MOUNT}" /usr/bin/systemd-firstboot --locale=en_US.UTF-8 --timezone=UTC --hostname=manjaro --keymap=us
   ln -sf /run/systemd/resolve/stub-resolv.conf "${MOUNT}/etc/resolv.conf"
 
   # Setup pacman-init.service for clean pacman keyring initialization
