@@ -78,7 +78,7 @@ function image_cleanup() {
   # So for the initial install we use the fallback initramfs, and
   # "autodetect" should add the relevant modules to the initramfs when
   # the user updates the kernel.
-  cp --reflink=always -a "${MOUNT}/boot/"{initramfs-*-fallback.img,initramfs-*.img}
+  # cp --reflink=always -a "${MOUNT}/boot/"{initramfs-*-fallback.img,initramfs-*.img}
 
   sync -f "${MOUNT}/etc/os-release"
   fstrim --verbose "${MOUNT}"
