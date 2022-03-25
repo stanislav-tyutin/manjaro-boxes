@@ -60,35 +60,8 @@ function setup_disk() {
 
 # Install Arch Linux to the filesystem (bootstrap)
 function bootstrap() {
-  cat <<EOF >pacman.conf
-Include = /etc/pacman.d/mirrorlist
-
-[extra]
-SigLevel = PackageRequired
-Include = /etc/pacman.d/mirrorlist
-
-[community]
-SigLevel = PackageRequired
-Include = /etc/pacman.d/mirrorlist
-
-# If you want to run 32 bit applications on your x86_64 system,
-# enable the multilib repositories as required here.
-
-[multilib]
-SigLevel = PackageRequired
-Include = /etc/pacman.d/mirrorlist
-
-# An example of a custom package repository.  See the pacman manpage for
-# tips on creating your own repositories.
-#[custom]
-#SigLevel = Optional TrustAll
-#Server = file:///home/custompkgs
-EOF
-
-  cp /etc/pacman.d/mirrorlist .
   # We use the hosts package cache
-  basestrap -c -C pacman.conf -M "${MOUNT}" base linux grub openssh sudo btrfs-progs reflector
-  cp mirrorlist "${MOUNT}/etc/pacman.d/"
+  basestrap -c "${MOUNT}" base linux grub openssh sudo btrfs-progs reflector
 }
 
 # Cleanup the image and trim it
