@@ -85,26 +85,7 @@ Include = /etc/pacman.d/mirrorlist
 #Server = file:///home/custompkgs
 EOF
 
-  cat <<EOF >mirrorlist
-## Global
-Server = https://mirrors.manjaro.org/repo/stable/$repo/$arch
-
-## Country : Belarus
-Server = http://mirror.datacenter.by/pub/mirrors/manjaro/stable/$repo/$arch
-
-## Country : Sweden
-Server = https://ftpmirror1.infania.net/mirror/manjaro/stable/$repo/$arch
-
-## Country : Sweden
-Server = https://mirror.zetup.net/manjaro/stable/$repo/$arch
-
-## Country : China
-Server = https://mirrors.tuna.tsinghua.edu.cn/manjaro/stable/$repo/$arch
-
-## Country : South_Korea
-Server = https://mirror.funami.tech/manjaro/stable/$repo/$arch
-EOF
-
+  cp /etc/pacman.d/mirrorlist .
   # We use the hosts package cache
   basestrap -c -C pacman.conf -M "${MOUNT}" base linux grub openssh sudo btrfs-progs reflector
   cp mirrorlist "${MOUNT}/etc/pacman.d/"
