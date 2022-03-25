@@ -61,7 +61,7 @@ function setup_disk() {
 # Install Arch Linux to the filesystem (bootstrap)
 function bootstrap() {
   # We use the hosts package cache
-  basestrap -c "${MOUNT}" base linux grub openssh sudo btrfs-progs reflector
+  basestrap -c "${MOUNT}" base linux grub openssh sudo btrfs-progs
 }
 
 # Cleanup the image and trim it
