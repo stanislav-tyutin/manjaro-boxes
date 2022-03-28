@@ -49,7 +49,7 @@ function start_qemu() {
   # Used to communicate with qemu
   mkfifo guest.out guest.in
   # We could use a sparse file but we want to fail early
-  fallocate -l 4G scratch-disk.img
+  fallocate -l 16G scratch-disk.img
 
   { qemu-system-x86_64 \
     -machine accel=kvm:tcg \
@@ -60,7 +60,7 @@ function start_qemu() {
     -kernel vmlinuz-x86_64 \
     -append "x86_64 lang=en_US keytable=us tz=UTC quiet systemd.show_status=1 misobasedir=manjaro misolable=${ISO_VOLUME_ID} driver=free 3" \
     -initrd initramfs-x86_64.img \
-    -append "cow_spacesize=2G ip=dhcp net.ifnames=0 console=ttyS0 mirror=${MIRROR}" \
+    -append "cow_spacesize=4G ip=dhcp net.ifnames=0 console=ttyS0 mirror=${MIRROR}" \
     -drive file=scratch-disk.img,format=raw,if=virtio \
     -drive file="${ISO}",format=raw,if=virtio,media=cdrom,read-only \
     -virtfs "local,path=${ORIG_PWD},mount_tag=host,security_model=none" \
