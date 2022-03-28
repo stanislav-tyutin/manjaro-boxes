@@ -48,7 +48,7 @@ systemctl enable pacman-init.service
 EOF
 
   # GRUB
-  manjaro-chroot "${MOUNT}" /usr/bin/grub-install --target=i386-pc --modules="btrfs zstd part_gpt part_msdos" "${LOOPDEV}"
+  manjaro-chroot "${MOUNT}" /usr/bin/grub-install --target=i386-pc "${LOOPDEV}"
   sed -i 's/^GRUB_TIMEOUT=.*$/GRUB_TIMEOUT=1/' "${MOUNT}/etc/default/grub"
   # setup unpredictable kernel names
   sed -i 's/^GRUB_CMDLINE_LINUX=.*$/GRUB_CMDLINE_LINUX="net.ifnames=0"/' "${MOUNT}/etc/default/grub"
